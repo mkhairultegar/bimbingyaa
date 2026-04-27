@@ -5,12 +5,13 @@
 // =====================================================
 
 const firebaseConfig = {
-  apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-  authDomain: "thesis-system-xxxxx.firebaseapp.com",
-  projectId: "thesis-system-xxxxx",
-  storageBucket: "thesis-system-xxxxx.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:xxxxxxxxxxxxxxxxxxxxxxxx"
+  apiKey: "AIzaSyBDDyaDm-kCMwwv-71fPa4z3sVP8tHydbo",
+  authDomain: "bimbingyaa.firebaseapp.com",
+  projectId: "bimbingyaa",
+  storageBucket: "bimbingyaa.firebasestorage.app",
+  messagingSenderId: "809754227939",
+  appId: "1:809754227939:web:d6d9fd7e884965810541d6",
+  measurementId: "G-EKYM4E6ZQ3"
 };
 
 // Inisialisasi Firebase
