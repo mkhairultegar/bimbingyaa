@@ -35,6 +35,10 @@ const authPage = {
       </div>
     `;
   },
+    renderLoginForm() {
+        return ;
+      },
+    
 
  
   renderRegisterForm() {
