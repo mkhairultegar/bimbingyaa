@@ -35,9 +35,24 @@ const authPage = {
       </div>
     `;
   },
-    renderLoginForm() {
-        return ;
-      },
+   renderLoginForm() {
+    return `
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="contoh@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Minimal 6 karakter" autocomplete="current-password">
+      </div>
+      <button class="btn-primary btn-full" id="submit-btn" onclick="authPage.handleLogin()">
+        <span>Masuk</span>
+      </button>
+     
+    `;
+  },
+
+
     
 
  
