@@ -98,7 +98,11 @@ const dashboard = {
 
     const unsub = query.onSnapshot(snapshot => {
       this.projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      this.renderProjectList();
+      // Hanya render ulang kalau sedang di halaman daftar proyek
+      const isInDetail = document.getElementById('chat-messages');
+      if (!isInDetail) {
+        this.renderProjectList();
+      }
     });
 
     this.unsubscribers.push(unsub);
