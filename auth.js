@@ -36,31 +36,7 @@ const authPage = {
     `;
   },
 
-  renderLoginForm() {
-    return `
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="email" placeholder="contoh@email.com" autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="Minimal 6 karakter" autocomplete="current-password">
-      </div>
-      <button class="btn-primary btn-full" id="submit-btn" onclick="authPage.handleLogin()">
-        <span>Masuk</span>
-      </button>
-      <div class="auth-demo">
-        <p>Demo akun:</p>
-        <div class="demo-accounts">
-          <button onclick="authPage.fillDemo('admin@thesis.id','demo1234')">👑 Admin</button>
-          <button onclick="authPage.fillDemo('writer@thesis.id','demo1234')">✍️ Penulis</button>
-          <button onclick="authPage.fillDemo('developer@thesis.id','demo1234')">💻 Developer</button>
-          <button onclick="authPage.fillDemo('client@thesis.id','demo1234')">🎓 Klien</button>
-        </div>
-      </div>
-    `;
-  },
-
+ 
   renderRegisterForm() {
     return `
       <div class="form-group">
