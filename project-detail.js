@@ -65,6 +65,10 @@ const projectDetail = {
               <div class="info-item"><span class="info-label">Klien</span><span>🎓 ${clientName}</span></div>
               <div class="info-item"><span class="info-label">Penulis</span><span>✍️ ${writerName}</span></div>
               <div class="info-item"><span class="info-label">Developer</span><span>💻 ${devName}</span></div>
+              <div class="info-item" style="flex-direction: column; align-items: flex-start;">
+                <span class="info-label">Deskripsi</span>
+                <span style="margin-top:5px;">${project.desc || 'Tidak ada deskripsi'}</span>
+              </div>
               <div class="info-item"><span class="info-label">Dibuat</span><span>${project.created_at?.toDate ? new Date(project.created_at.toDate()).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) : '-'}</span></div>
             </div>
 
