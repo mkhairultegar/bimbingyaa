@@ -206,7 +206,23 @@ const projectDetail = {
         file_link: file_link || '',
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
-
+      // Kirim notif ke semua member proyek
+      const project = dashboard.projects.find(p => p.id === projectId);
+      const targets = [project.writer_id, project.developer_id, project.client_id]
+        .filter(uid => uid && uid !== dashboard.currentUser.uid);
+      
+      for (const uid of targets) {
+        await db.collection('notifications').add({
+          project_id: projectId,
+          project_name: project.name,
+          sender_role: dashboard.userRole,
+          sender_name: dashboard.userData.name,
+          message_preview: message.substring(0, 60),
+          target_uid: uid,
+          is_read: false,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
       // Update updated_at di project
       await db.collection('projects').doc(projectId).update({
         updated_at: firebase.firestore.FieldValue.serverTimestamp()
