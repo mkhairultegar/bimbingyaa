@@ -207,7 +207,14 @@ const projectDetail = {
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
       // Kirim notif ke semua member proyek
-      const project = dashboard.projects.find(p => p.id === projectId);
+      let project = dashboard.projects.find(p => p.id === projectId);
+        
+        if (!project) {
+          const snap = await db.collection('projects').doc(projectId).get();
+          if (snap.exists) {
+            project = { id: snap.id, ...snap.data() };
+          }
+        }
       const targets = [project.writer_id, project.developer_id, project.client_id]
         .filter(uid => uid && uid !== dashboard.currentUser.uid);
       
