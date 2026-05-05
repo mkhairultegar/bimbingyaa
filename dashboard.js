@@ -5,6 +5,7 @@
 const dashboard = {
   currentUser: null,
   userRole: null,
+  notifCounts: {},
   projects: [],
   unsubscribers: [],
 
@@ -20,13 +21,21 @@ const dashboard = {
         .where('target_uid', '==', user.uid)
         .where('is_read', '==', false)
         .onSnapshot(snap => {
-          const count = snap.size;
-          const badge = document.getElementById('notif-badge');
-    
-          if (badge) {
-            badge.textContent = count > 0 ? count : '';
-            badge.style.display = count > 0 ? 'flex' : 'none';
-          }
+      
+          const counts = {};
+      
+          snap.forEach(doc => {
+            const data = doc.data();
+            const pid = data.project_id;
+      
+            if (!counts[pid]) counts[pid] = 0;
+            counts[pid]++;
+          });
+      
+          this.notifCounts = counts;
+      
+          // refresh project list biar badge muncul
+          this.renderProjectList();
         });
     
       this.loadProjects();
@@ -162,7 +171,21 @@ const dashboard = {
                 <span class="status-badge ${statusClass[p.status] || ''}">${statusLabel[p.status] || p.status}</span>
                 ${this.userRole === 'admin' ? `<button class="btn-icon" onclick="event.stopPropagation(); dashboard.showAssign('${p.id}')" title="Tugaskan Tim">⚙️</button>` : ''}
               </div>
-              <h4 class="project-title">${p.name}</h4>
+              <h4 class="project-title" style="display:flex;align-items:center;justify-content:space-between">
+                <span>${p.name}</span>
+                ${this.notifCounts[p.id] ? `
+                  <span style="
+                    background:#ef4444;
+                    color:white;
+                    font-size:.7rem;
+                    padding:2px 6px;
+                    border-radius:999px;
+                    font-weight:700;
+                  ">
+                    ${this.notifCounts[p.id]}
+                  </span>
+                ` : ''}
+              </h4>
               <div class="project-meta">
                 <span>🎓 ${p.nim}</span>
                 <span>📚 ${p.jurusan}</span>
