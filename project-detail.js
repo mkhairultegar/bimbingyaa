@@ -7,6 +7,7 @@ const projectDetail = {
   unsubscribers: [],
 
   async open(projectId) {
+    dashboard.isInDetail = true;
     this.projectId = projectId;
     this.unsubscribers.forEach(fn => fn());
     this.unsubscribers = [];
@@ -34,7 +35,6 @@ const projectDetail = {
 
     this.renderDetail(project, writerName, devName, clientName);
     await this.markProjectNotifAsRead(projectId);
-    dashboard.notifCounts[projectId] = 0;
     dashboard.renderProjectList();
     this.listenUpdates(projectId);
   },
