@@ -30,7 +30,6 @@ const dashboard = {
         });
     
       this.loadProjects();
-    }
   },
 
   render() {
@@ -53,6 +52,7 @@ const dashboard = {
           <nav class="sidebar-nav">            
             <a href="#" class="nav-item active" onclick="dashboard.showView('projects')">
               <span>📋</span> Daftar Proyek
+            </a>
               <a href="#" class="nav-item" onclick="dashboard.showNotifications()">
                 <span>🔔</span> Notifikasi
                 <span id="notif-badge" style="
@@ -61,7 +61,6 @@ const dashboard = {
                   display:none; align-items:center; justify-content:center;
                   margin-left:auto;
                 ">0</span>
-              </a>
             </a>
             ${this.userRole === 'admin' ? `
             <a href="#" class="nav-item" onclick="dashboard.showView('users')">
@@ -387,8 +386,8 @@ const dashboard = {
         </div>
       `;
     });
-  }
-    showNotifications() {
+  },
+  showNotifications() {
       document.getElementById('page-title').textContent = 'Notifikasi';
       document.getElementById('content-area').innerHTML = `
         <div class="loading-state"><div class="spinner-lg"></div><p>Memuat notifikasi...</p></div>
@@ -419,6 +418,7 @@ const dashboard = {
                 `).join('')
               }
             </div>
+            <button onclick="dashboard.markAllRead()">Tandai Semua Dibaca</button>
           `;
         });
     },
@@ -426,5 +426,14 @@ const dashboard = {
     async readNotif(notifId, projectId) {
       await db.collection('notifications').doc(notifId).update({ is_read: true });
       projectDetail.open(projectId);
+    },
+    async markAllRead() {
+      const snap = await db.collection('notifications')
+        .where('target_uid', '==', dashboard.currentUser.uid)
+        .where('is_read', '==', false).get();
+      const batch = db.batch();
+      snap.docs.forEach(d => batch.update(d.ref, { is_read: true }));
+      await batch.commit();
     }
+    
 };
