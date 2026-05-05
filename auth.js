@@ -7,7 +7,6 @@ const authPage = {
 
   init() {
     this.render();
-    this.bindEvents();
   },
 
   render() {
