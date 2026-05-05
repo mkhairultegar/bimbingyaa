@@ -62,15 +62,6 @@ const dashboard = {
             <a href="#" class="nav-item active" onclick="dashboard.showView('projects')">
               <span>📋</span> Daftar Proyek
             </a>
-              <a href="#" class="nav-item" onclick="dashboard.showNotifications()">
-                <span>🔔</span> Notifikasi
-                <span id="notif-badge" style="
-                  background:#ef4444; color:white; border-radius:50%;
-                  width:20px; height:20px; font-size:.7rem; font-weight:700;
-                  display:none; align-items:center; justify-content:center;
-                  margin-left:auto;
-                ">0</span>
-            </a>
             ${this.userRole === 'admin' ? `
             <a href="#" class="nav-item" onclick="dashboard.showView('users')">
               <span>👥</span> Manajemen User
