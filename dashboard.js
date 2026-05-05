@@ -36,11 +36,20 @@ const dashboard = {
       
           // refresh project list biar badge muncul
           if (document.getElementById('project-grid')) {
-            this.renderProjectList();
+            this.updateProjectBadges();
           }
         });
     
       this.loadProjects();
+    updateProjectBadges() {
+      Object.keys(this.notifCounts).forEach(pid => {
+        const el = document.querySelector(`[data-project-id="${pid}"] .notif-badge`);
+        if (el) {
+          el.innerText = this.notifCounts[pid];
+          el.style.display = 'inline-block';
+        }
+      });
+    }
   },
 
   render() {
