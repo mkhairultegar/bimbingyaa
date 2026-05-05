@@ -35,7 +35,9 @@ const dashboard = {
           this.notifCounts = counts;
       
           // refresh project list biar badge muncul
-          this.renderProjectList();
+          if (document.getElementById('project-grid')) {
+            this.renderProjectList();
+          }
         });
     
       this.loadProjects();
@@ -400,54 +402,5 @@ const dashboard = {
         </div>
       `;
     });
-  },
-  showNotifications() {
-      document.getElementById('page-title').textContent = 'Notifikasi';
-      document.getElementById('content-area').innerHTML = `
-        <div class="loading-state"><div class="spinner-lg"></div><p>Memuat notifikasi...</p></div>
-      `;
-    
-      db.collection('notifications')
-        .where('target_uid', '==', this.currentUser.uid)
-        .orderBy('timestamp', 'desc')
-        .limit(30)
-        .onSnapshot(snap => {
-          const notifs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    
-          document.getElementById('content-area').innerHTML = `
-            <div class="table-card">
-              <h3>🔔 Notifikasi</h3>
-              ${notifs.length === 0 
-                ? '<p style="text-align:center;padding:2rem">Tidak ada notifikasi</p>'
-                : notifs.map(n => `
-                  <div onclick="dashboard.readNotif('${n.id}','${n.project_id}')" style="
-                    padding:1rem; margin-bottom:.5rem; cursor:pointer;
-                    background:${n.is_read ? '#fff' : '#eef2ff'};
-                    border-radius:10px;
-                  ">
-                    <strong>${n.sender_name}</strong><br>
-                    <small>${n.project_name}</small><br>
-                    ${n.message_preview}...
-                  </div>
-                `).join('')
-              }
-            </div>
-            <button onclick="dashboard.markAllRead()">Tandai Semua Dibaca</button>
-          `;
-        });
-    },
-    
-    async readNotif(notifId, projectId) {
-      await db.collection('notifications').doc(notifId).update({ is_read: true });
-      projectDetail.open(projectId);
-    },
-    async markAllRead() {
-      const snap = await db.collection('notifications')
-        .where('target_uid', '==', dashboard.currentUser.uid)
-        .where('is_read', '==', false).get();
-      const batch = db.batch();
-      snap.docs.forEach(d => batch.update(d.ref, { is_read: true }));
-      await batch.commit();
-    }
-    
+  },    
 };
