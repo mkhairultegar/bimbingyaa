@@ -30,6 +30,8 @@ const dashboard = {
       
             if (!counts[pid]) counts[pid] = 0;
             counts[pid]++;
+            this.unsubscribers.push(notifUnsub);
+          
           });
       
           this.notifCounts = counts;
@@ -41,7 +43,11 @@ const dashboard = {
         });
     
       this.loadProjects();
+  },
     updateProjectBadges() {
+      document.querySelectorAll('.notif-badge').forEach(el => {
+        el.style.display = 'none';
+      });
       Object.keys(this.notifCounts).forEach(pid => {
         const el = document.querySelector(`[data-project-id="${pid}"] .notif-badge`);
         if (el) {
@@ -49,9 +55,7 @@ const dashboard = {
           el.style.display = 'inline-block';
         }
       });
-    }
-  },
-
+    },
   render() {
     const roleLabel = { admin: '👑 Admin', writer: '✍️ Penulis', developer: '💻 Developer', client: '🎓 Klien' };
     document.getElementById('app').innerHTML = `
@@ -111,7 +115,10 @@ const dashboard = {
 
   showView(view) {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    event?.target?.closest('.nav-item')?.classList.add('active');
+    const clicked = (typeof event !== 'undefined') 
+      ? event.target.closest('.nav-item') 
+      : null;
+    if (clicked) clicked.classList.add('active');
     if (view === 'projects') this.renderProjectList();
     if (view === 'users') this.renderUserManagement();
   },
@@ -120,7 +127,6 @@ const dashboard = {
   loadProjects() {
     // Unsubscribe listener sebelumnya
     this.unsubscribers.forEach(fn => fn());
-    this.unsubscribers = [];
 
     let query = db.collection('projects').orderBy('created_at', 'desc');
 
@@ -168,25 +174,24 @@ const dashboard = {
         ${this.projects.length === 0 
           ? '<div class="empty-state">📭 Belum ada proyek.</div>'
           : this.projects.map(p => `
-            <div class="project-card" onclick="projectDetail.open('${p.id}')">
+            <div class="project-card" data-project-id="${p.id}" onclick="projectDetail.open('${p.id}')">
               <div class="project-card-header">
                 <span class="status-badge ${statusClass[p.status] || ''}">${statusLabel[p.status] || p.status}</span>
                 ${this.userRole === 'admin' ? `<button class="btn-icon" onclick="event.stopPropagation(); dashboard.showAssign('${p.id}')" title="Tugaskan Tim">⚙️</button>` : ''}
               </div>
               <h4 class="project-title" style="display:flex;align-items:center;justify-content:space-between">
                 <span>${p.name}</span>
-                ${this.notifCounts[p.id] ? `
-                  <span style="
-                    background:#ef4444;
-                    color:white;
-                    font-size:.7rem;
-                    padding:2px 6px;
-                    border-radius:999px;
-                    font-weight:700;
-                  ">
-                    ${this.notifCounts[p.id]}
-                  </span>
-                ` : ''}
+                <span class="notif-badge" style="
+                  display:${this.notifCounts[p.id] ? 'inline-block' : 'none'};
+                  background:#ef4444;
+                  color:white;
+                  font-size:.7rem;
+                  padding:2px 6px;
+                  border-radius:999px;
+                  font-weight:700;
+                ">
+                  ${this.notifCounts[p.id] || 0}
+                </span>
               </h4>
               <div class="project-meta">
                 <span>🎓 ${p.nim}</span>
@@ -205,6 +210,7 @@ const dashboard = {
       </div>
     `;
     document.getElementById('content-area').innerHTML = html;
+    setTimeout(() => this.updateProjectBadges(), 100);
   },
 
   renderStats() {
