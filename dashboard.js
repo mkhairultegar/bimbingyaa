@@ -8,6 +8,7 @@ const dashboard = {
   notifCounts: {},
   projects: [],
   unsubscribers: [],
+  isInDetail: false,
 
   async init(user, userData) {
       this.currentUser = user;
@@ -30,7 +31,6 @@ const dashboard = {
       
             if (!counts[pid]) counts[pid] = 0;
             counts[pid]++;
-            this.unsubscribers.push(notifUnsub);
           
           });
       
@@ -141,8 +141,7 @@ const dashboard = {
     const unsub = query.onSnapshot(snapshot => {
       this.projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       // Hanya render ulang kalau sedang di halaman daftar proyek
-      const isInDetail = document.getElementById('chat-messages');
-      if (!isInDetail) {
+      if (!this.isInDetail) {
         this.renderProjectList();
       }
     });
