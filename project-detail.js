@@ -33,6 +33,7 @@ const projectDetail = {
     ]);
 
     this.renderDetail(project, writerName, devName, clientName);
+    await this.markProjectNotifAsRead(projectId);
     this.listenUpdates(projectId);
   },
 
@@ -265,13 +266,15 @@ const projectDetail = {
       .replace(/\n/g, '<br>');
   }
   // tandai notif project ini sebagai sudah dibaca
+  async markProjectNotifAsRead(projectId) {
   const snap = await db.collection('notifications')
     .where('target_uid', '==', dashboard.currentUser.uid)
     .where('project_id', '==', projectId)
     .where('is_read', '==', false)
     .get();
-  
+
   const batch = db.batch();
   snap.docs.forEach(d => batch.update(d.ref, { is_read: true }));
   await batch.commit();
+}
 };
