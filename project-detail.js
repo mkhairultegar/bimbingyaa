@@ -34,6 +34,8 @@ const projectDetail = {
 
     this.renderDetail(project, writerName, devName, clientName);
     await this.markProjectNotifAsRead(projectId);
+    dashboard.notifCounts[projectId] = 0;
+    dashboard.renderProjectList();
     this.listenUpdates(projectId);
   },
 
