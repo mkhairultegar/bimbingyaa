@@ -266,7 +266,7 @@ const projectDetail = {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/\n/g, '<br>');
-  }
+  },
   // tandai notif project ini sebagai sudah dibaca
   async markProjectNotifAsRead(projectId) {
   const snap = await db.collection('notifications')
